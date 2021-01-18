@@ -1,12 +1,12 @@
 "use strict"
 
 // 1. Please write a function that reverses a string
-function reverseAString(string) {
+function reverseAString(string = '') {
   return string.split("").reverse().join("")
 }
 
 // 2. Please write a function that filters out numbers from a list
-function filtersOutNumbers(list) {
+function filtersOutNumbers(list = []) {
   if (list.length === 0) {
     return list
   }
@@ -18,10 +18,25 @@ function filtersOutNumbers(list) {
 }
 
 // 3. Please write a function that shows the usage of closures
+function usageOfClosures() {
+  let counter = 0
+  return () => {
+    counter += 1
+    console.log(counter)
+  }
+}
+let localScopeOne = usageOfClosures()
+let localScopeTwo = usageOfClosures()
+localScopeOne() //1
+localScopeOne() //2
+localScopeTwo() //1
 
 // 4. Please write a recursive function that flattens an list of items
-// example input [[2, [4, [44,5,6]]], [4,5,6], [[2,4], 4], 5]]
+// example input [[2, [4, [44,5,6]]], [4,5,6], [[2,4], 4], 5]
 // example output [2, 4, 44, 5, 6, 4, 5, 6, 2, 4, 4, 5]
+function flattensAnListOfItems(list = []) {
+  return list.flat()
+}
 
 // 5. Please write a function that finds all common elements of two arrays(only primitive types as array elements, order doesn't matter)
 // example inputs ['b', 3, 4, 76, 'c'], ['a', 'b', 4, 76, 21, 'e']
@@ -57,12 +72,12 @@ function filtersOutNumbers(list) {
 
 // Jest tests
 describe("functions from index.js", () => {
-  it("reverseAString", () => {
+  it("1) reverseAString", () => {
     expect(reverseAString("DOM")).toBe("MOD")
     expect(reverseAString("Metallica")).toBe("acillateM")
   })
 
-  it("filtersOutNumbers", () => {
+  it("2) filtersOutNumbers", () => {
     expect(filtersOutNumbers([])).toEqual([])
     expect(
       filtersOutNumbers([
@@ -78,5 +93,9 @@ describe("functions from index.js", () => {
         { a: 3 },
       ])
     ).toEqual([1, 2, 3.3])
+  })
+
+  it("4) flattensAnListOfItems", () => {
+    expect(flattensAnListOfItems([[2, [4, [44,5,6]]], [4,5,6], [[2,4], 4], 5])).toEqual([2, 4, 44, 5, 6, 2, 4, 4, 5])
   })
 })
