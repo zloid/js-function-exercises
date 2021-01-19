@@ -68,20 +68,31 @@ function findAllDifferentElements(arrayOne = [], arrayTwo = []) {
 }
 
 // 7. Please write a function that transforms an object to a list of [key, value] tuples.
-// example input { color: 'Blue', id: '22', size: 'xl' }
+// example input { color: 'blue', id: '22', size: 'xl' }
 // example output [['color', 'blue'], ['id', '22'], ['size', 'xl']]
 function transformsObjectToListOfTuples(inputObject = {}) {
     const arrayOfKeys = Object.keys(inputObject)
+
     return arrayOfKeys.map((key) => [key, inputObject[key]])
 }
 
-// 8. Please write a function that transforms a list of [key, value] tuples to object. // reverse or task 7
+// 8. Please write a function that transforms a list of [key, value] tuples to object. // reverse of task 7
 // example input [['color', 'blue'], ['id', '22'], ['size', 'xl']]
-// example output { color: 'Blue', id: '22', size: 'xl' }
+// example output { color: 'blue', id: '22', size: 'xl' }
+function transformsListOfTuplesToObject(inputList = []) {
+    let outputObject = {}
+
+    inputList.forEach((tuples) => (outputObject[tuples[0]] = tuples[1]))
+
+    return outputObject
+}
 
 // 9. Please write a function that takes two arrays of items and returns an array of tuples made from two input arrays at the same indexes. Excessive items should be dropped.
 // example input [1,2,3], [4,5,6,7]
 // example output [[1,4], [2,5], [3,6]]
+function dropExcessiveItems(arrayOne = [], arrayTwo = []) {
+    return arrayOne.map((element, index) => [element, arrayTwo[index]])
+}
 
 // 10. Please write a function which takes a path(path is an array of keys) and object, then returns value at this path. If value at path doesn't exists, return undefined.
 // example inputs ['a', 'b', 'c', 'd'], { a: { b: { c: { d: '23' } } } }
@@ -135,32 +146,67 @@ describe('functions from index.js', () => {
             8,
         ])
     })
-})
 
-it('5) findAllCommonElements', () => {
-    expect(
-        findAllCommonElements(['b', 3, 4, 76, 'c'], ['a', 'b', 4, 76, 21, 'e'])
-    ).toEqual(['b', 4, 76])
-})
+    it('5) findAllCommonElements', () => {
+        expect(
+            findAllCommonElements(
+                ['b', 3, 4, 76, 'c'],
+                ['a', 'b', 4, 76, 21, 'e']
+            )
+        ).toEqual(['b', 4, 76])
+    })
 
-it('6) findAllCommonElements', () => {
-    expect(
-        findAllDifferentElements(
-            ['b', 3, 4, 76, 'c'],
-            ['a', 'b', 4, 76, 21, 'e']
-        )
-    ).toEqual([3, 'c', 'a', 21, 'e'])
-    expect(
-        findAllDifferentElements([1, 2, 3], ['1', '2', '3', 1, 2, 3, '4', '5'])
-    ).toEqual(['1', '2', '3', '4', '5'])
-})
+    it('6) findAllCommonElements', () => {
+        expect(
+            findAllDifferentElements(
+                ['b', 3, 4, 76, 'c'],
+                ['a', 'b', 4, 76, 21, 'e']
+            )
+        ).toEqual([3, 'c', 'a', 21, 'e'])
+        expect(
+            findAllDifferentElements(
+                [1, 2, 3],
+                ['1', '2', '3', 1, 2, 3, '4', '5']
+            )
+        ).toEqual(['1', '2', '3', '4', '5'])
+    })
 
-it('7) transformsObjectToListOfTuples', () => {
-    expect(
-        transformsObjectToListOfTuples({ color: 'blue', id: '22', size: 'xl' })
-    ).toEqual([
-        ['color', 'blue'],
-        ['id', '22'],
-        ['size', 'xl'],
-    ])
+    it('7) transformsObjectToListOfTuples', () => {
+        expect(
+            transformsObjectToListOfTuples({
+                color: 'blue',
+                id: '22',
+                size: 'xl',
+            })
+        ).toEqual([
+            ['color', 'blue'],
+            ['id', '22'],
+            ['size', 'xl'],
+        ])
+    })
+
+    it('8) transformsListOfTuplesToObject', () => {
+        expect(
+            transformsListOfTuplesToObject([
+                ['color', 'blue'],
+                ['id', '22'],
+                ['size', 'xl'],
+            ])
+        ).toEqual({
+            color: 'blue',
+            id: '22',
+            size: 'xl',
+        })
+    })
+
+    it('9) dropExcessiveItems', () => {
+        expect(dropExcessiveItems([1, 2, 3], [4, 5, 6, 7])).toEqual([
+            [1, 4],
+            [2, 5],
+            [3, 6],
+        ])
+    })
+
+    /*
+     end of jest tests */
 })
