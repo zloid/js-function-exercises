@@ -25,8 +25,8 @@ function usageOfClosures() {
         console.log(counter)
     }
 }
-let localScopeOne = usageOfClosures()
-let localScopeTwo = usageOfClosures()
+const localScopeOne = usageOfClosures()
+const localScopeTwo = usageOfClosures()
 localScopeOne() //1
 localScopeOne() //2
 localScopeTwo() //1
@@ -80,7 +80,7 @@ function transformsObjectToListOfTuples(inputObject = {}) {
 // example input [['color', 'blue'], ['id', '22'], ['size', 'xl']]
 // example output { color: 'blue', id: '22', size: 'xl' }
 function transformsListOfTuplesToObject(inputList = []) {
-    let outputObject = {}
+    const outputObject = {}
 
     inputList.forEach((tuples) => (outputObject[tuples[0]] = tuples[1]))
 
@@ -97,17 +97,53 @@ function dropExcessiveItems(arrayOne = [], arrayTwo = []) {
 // 10. Please write a function which takes a path(path is an array of keys) and object, then returns value at this path. If value at path doesn't exists, return undefined.
 // example inputs ['a', 'b', 'c', 'd'], { a: { b: { c: { d: '23' } } } }
 // example output '23'
+function takePathAndObjectOutValueAtPath(path, object) {
+    if (!path) return undefined
+
+    return path.reduce((accum, pathKey) => accum && accum[pathKey], object)
+}
 
 // 11. Please write compare function which compares 2 objects for equality.
 // example input { a: 'b', c: 'd' }, { c: 'd', a: 'b' }  /// output true
 // example input { a: 'c', c: 'a' }, { c: 'd', a: 'b', q: 's' }  /// output false
+function comparesObjectsForEquality(objOne = {}, objTwo = {}) {
+    const arrayOfKeys = Object.keys(objOne)
+    const arrayOfKeysTwo = Object.keys(objTwo)
+
+    for (let i = 0; i < arrayOfKeys.length; i++) {
+        if (objOne[arrayOfKeys[i]] !== objTwo[arrayOfKeys[i]]) {
+            return false
+        }
+    }
+    for (let i = 0; i < arrayOfKeysTwo.length; i++) {
+        if (objTwo[arrayOfKeysTwo[i]] !== objOne[arrayOfKeysTwo[i]]) {
+            return false
+        }
+    }
+
+    return true
+}
 
 // 12. Please write a function which takes a list of keys and an object, then returns this object, just without keys from the list
 // example input ['color', 'size'], { color: 'Blue', id: '22', size: 'xl' }
 // example output { id: '22' }
+function takeListAndObjectOutObject(list = [], object = {}) {
+    const outObject = {}
+    const arrayOfObjKeys = Object.keys(object)
 
-// Jest tests
-describe('functions from index.js', () => {
+    const objectKeysNotInList = arrayOfObjKeys.filter(
+        (key) => list.indexOf(key) === -1
+    )
+
+    objectKeysNotInList.forEach((key) => (outObject[key] = object[key]))
+
+    return outObject
+}
+
+/*  
+Jest tests 
+*/
+describe('functions', () => {
     it('1) reverseAString', () => {
         expect(reverseAString('DOM')).toBe('MOD')
         expect(reverseAString('Metallica')).toBe('acillateM')
@@ -156,7 +192,7 @@ describe('functions from index.js', () => {
         ).toEqual(['b', 4, 76])
     })
 
-    it('6) findAllCommonElements', () => {
+    it('6) findAllDifferentElements', () => {
         expect(
             findAllDifferentElements(
                 ['b', 3, 4, 76, 'c'],
@@ -207,6 +243,52 @@ describe('functions from index.js', () => {
         ])
     })
 
+    it('10) takePathAndObjectOutValueAtPath', () => {
+        expect(
+            takePathAndObjectOutValueAtPath(['a', 'b', 'c', 'd'], {
+                a: { b: { c: { d: '23' } } },
+            })
+        ).toBe('23')
+        expect(takePathAndObjectOutValueAtPath()).toBe(undefined)
+    })
+
+    it('11) comparesObjectsForEquality', () => {
+        expect(
+            comparesObjectsForEquality({ a: 'b', c: 'd' }, { c: 'd', a: 'b' })
+        ).toBe(true)
+        expect(
+            comparesObjectsForEquality(
+                { a: 'c', c: 'a' },
+                { c: 'd', a: 'b', q: 's' }
+            )
+        ).toBe(false)
+        expect(
+            comparesObjectsForEquality(
+                { a: 'c', c: 'a' },
+                { a: 'c', c: 'a', q: 's' }
+            )
+        ).toBe(false)
+    })
+
+    it('12) takeListAndObjectOutObject', () => {
+        expect(
+            takeListAndObjectOutObject(['color', 'size'], {
+                color: 'Blue',
+                id: '22',
+                size: 'xl',
+            })
+        ).toEqual({ id: '22' })
+        expect(
+            takeListAndObjectOutObject(['color', 'size'], {
+                color: 'Blue',
+                id: '22',
+                size: 'xl',
+                foo: 'bar',
+            })
+        ).toEqual({ id: '22', foo: 'bar' })
+    })
+
     /*
-     end of jest tests */
+     end of jest tests
+      */
 })
