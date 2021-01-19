@@ -50,15 +50,30 @@ function flatListOfItems(list = [], outputArray = []) {
 // 5. Please write a function that finds all common elements of two arrays(only primitive types as array elements, order doesn't matter)
 // example inputs ['b', 3, 4, 76, 'c'], ['a', 'b', 4, 76, 21, 'e']
 // example output ['b', 4, 76]
-function findAllCommonElements(arrayOne = [], arrayTwo = []) {}
+function findAllCommonElements(arrayOne = [], arrayTwo = []) {
+    return arrayOne.filter((element) => arrayTwo.indexOf(element) !== -1)
+}
 
 // 6. Please write a function that finds all different elements of two arrays(only primitive types as array elements, order doesn't matter)
 // example inputs ['b', 3, 4, 76, 'c'], ['a', 'b', 4, 76, 21, 'e']
 // example output ['a', 3, 21, 'c', 'e']
+function findAllDifferentElements(arrayOne = [], arrayTwo = []) {
+    let firstDifference = arrayOne.filter(
+        (element) => arrayTwo.indexOf(element) === -1
+    )
+    let secondDifference = arrayTwo.filter(
+        (element) => arrayOne.indexOf(element) === -1
+    )
+    return [...firstDifference, ...secondDifference]
+}
 
 // 7. Please write a function that transforms an object to a list of [key, value] tuples.
 // example input { color: 'Blue', id: '22', size: 'xl' }
 // example output [['color', 'blue'], ['id', '22'], ['size', 'xl']]
+function transformsObjectToListOfTuples(inputObject = {}) {
+    const arrayOfKeys = Object.keys(inputObject)
+    return arrayOfKeys.map((key) => [key, inputObject[key]])
+}
 
 // 8. Please write a function that transforms a list of [key, value] tuples to object. // reverse or task 7
 // example input [['color', 'blue'], ['id', '22'], ['size', 'xl']]
@@ -122,4 +137,30 @@ describe('functions from index.js', () => {
     })
 })
 
-it('5) findAllCommonElements', () => {})
+it('5) findAllCommonElements', () => {
+    expect(
+        findAllCommonElements(['b', 3, 4, 76, 'c'], ['a', 'b', 4, 76, 21, 'e'])
+    ).toEqual(['b', 4, 76])
+})
+
+it('6) findAllCommonElements', () => {
+    expect(
+        findAllDifferentElements(
+            ['b', 3, 4, 76, 'c'],
+            ['a', 'b', 4, 76, 21, 'e']
+        )
+    ).toEqual([3, 'c', 'a', 21, 'e'])
+    expect(
+        findAllDifferentElements([1, 2, 3], ['1', '2', '3', 1, 2, 3, '4', '5'])
+    ).toEqual(['1', '2', '3', '4', '5'])
+})
+
+it('7) transformsObjectToListOfTuples', () => {
+    expect(
+        transformsObjectToListOfTuples({ color: 'blue', id: '22', size: 'xl' })
+    ).toEqual([
+        ['color', 'blue'],
+        ['id', '22'],
+        ['size', 'xl'],
+    ])
+})
